@@ -1,13 +1,16 @@
 // Dependencies
-var express = require("express");
-var path = require("path");
+const express = require("express");
+const path = require("path");
+const database = require("./db/db.json");
 
+const app = express();
+const PORT = process.env.PORT || 8080;
 
-var app = express();
-var PORT = process.env.PORT || 8080;
+app.use(express.static('public'));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
 
 // Routes
 app.get("/notes", function(req, res) {
@@ -15,12 +18,18 @@ app.get("/notes", function(req, res) {
 });
 
 app.get("/api/notes", function(req, res) {
-  res.sendFile(path.join(__dirname, "/db/db.json"));
+  res.json(database);
 }); 
 
 app.get("*", function(req, res) {
   res.sendFile(path.join(__dirname, "/public/index.html"));
 });
+
+app.post("/api/notes", function(req, res) {
+  const newNote = req.body;
+  database.push(newNote);
+  res.send(database);
+}); 
 
 // Listener
 app.listen(PORT, function() {
