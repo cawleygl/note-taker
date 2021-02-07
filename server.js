@@ -28,6 +28,12 @@ app.get("*", function(req, res) {
 app.post("/api/notes", function(req, res) {
   const newNote = req.body;
   database.push(newNote);
+
+  for (i of database) {
+    i.id = database.indexOf(i) + 1;
+  }
+
+  console.log(database);
   res.send(database);
 }); 
 
